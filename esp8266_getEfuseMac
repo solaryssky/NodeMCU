@@ -1,0 +1,44 @@
+
+
+#define    REG_READ(_r)        (*(volatile    uint32    *)(_r))
+
+#define DR_REG_EFUSE_BASE   0x3FF00050
+#define EFUSE_DATA0_REG     (DR_REG_EFUSE_BASE + 0x000)
+#define EFUSE_DATA1_REG     (DR_REG_EFUSE_BASE + 0x004)
+#define EFUSE_DATA2_REG     (DR_REG_EFUSE_BASE + 0x008)
+#define EFUSE_DATA3_REG     (DR_REG_EFUSE_BASE + 0x00C)
+
+#include <ESP8266WiFi.h>
+
+uint64_t getEfuseMac() {
+  uint32_t efuse[4];
+  uint8_t mac[6];
+  uint64_t out = 0;
+
+  efuse[0] = REG_READ(EFUSE_DATA0_REG);
+  efuse[1] = REG_READ(EFUSE_DATA1_REG);
+  efuse[2] = REG_READ(EFUSE_DATA2_REG);
+  efuse[3] = REG_READ(EFUSE_DATA3_REG);
+
+  mac[0] = efuse[3] >> 16;
+  mac[1] = efuse[3] >> 8;
+  mac[2] = efuse[3];
+  mac[3] = efuse[1] >> 8;
+  mac[4] = efuse[1];
+  mac[5] = efuse[0] >> 24;
+
+  memcpy(&out, mac, sizeof(mac));
+
+  return out;
+}
+
+void setup() {
+    Serial.begin(115200);
+    Serial.println(WiFi.macAddress());
+    Serial.println(String(getEfuseMac(), HEX));
+}
+
+void loop() {
+  
+}
+
