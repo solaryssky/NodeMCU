@@ -73,9 +73,32 @@ void setup()
 void loop()
 {
   /* prints dynamic text */
+
+
   lcd.setCursor(14, 2);             //set 15-th colum & 3-rd  row, 1-st colum & row started at zero
   lcd.print(random(10, 1000));
   lcd.write(LCD_SPACE_SYMBOL);
 
   delay(1000);
+
+
+
+
+   // передвигаем надпись вправо
+   for (int i = 0; i < 10; i++) {
+      lcd.setCursor(i, 0);
+      lcd.print("HELLO!");
+      delay(200);
+      lcd.clear(); // очищаем экран
+   } 
+   // передвигаем надпись влево
+   for (int i = 10; i > 0; i--) {
+      lcd.setCursor(i, 0);
+      lcd.print("HELLO!");
+      delay(200);
+      lcd.clear(); // очищаем экран
+   }
+
+
+
 }
